@@ -14,7 +14,7 @@ const sketch = () => {
 
   const createGrid = (count, palette) => {
     return Array.from({ length: count }, (_, x) =>
-      Array.from({ length: count }, (_, y) => {
+      Array.from( length: count }, (_, y) => {
         const u = count === 1 ? 0.5 : x / (count - 1);
         const v = count === 1 ? 0.5 : y / (count - 1);
         const rotation = random.noise2D(u, v);
@@ -28,7 +28,7 @@ const sketch = () => {
       })
     ).flat();
   };
-
+gogogogogogogogogogogogogogogogogogogogogogogogogogogogogogo
   const gridSize = 10;
 
   // random.setSeed('asdf');

@@ -1,5 +1,6 @@
 // Ensure ThreeJS is in global scope for the 'examples/'
 global.THREE = require("three");
+import palettes from 'nice-color-palettes';
 
 import { random } from 'canvas-sketch-util';
 
@@ -9,6 +10,9 @@ require("three/examples/js/controls/OrbitControls");
 const canvasSketch = require("canvas-sketch");
 
 const settings = {
+  dimensions: [ 512, 512 ],
+  fps: 24, // 24 is good for GIF's , and 30 for extra-quallity 
+  diration: 4,
   // Make the loop animated
   animate: true,
   // Get a WebGL canvas rather than 2D
@@ -30,15 +34,17 @@ const sketch = ({ context }) => {
   // Setup your scene
   const scene = new THREE.Scene();
   const geometry = new THREE.BoxGeometry(1,1,1);
-  const material = new THREE.MeshBasicMaterial({
-    color: 'black',
+  const materialColor = (color) => new THREE.MeshStandardMaterial({
+    color,
   })
 
-  for (let i = 0; i < 10; i++) {
+  const randomColor = () => random.pick(random.pick(palettes));
+
+  for (let i = 0; i < 40; i++) {
     // Setup a mesh with geometry + material
     const mesh = new THREE.Mesh(
       geometry,
-      material,
+      materialColor(randomColor()),
     );
 
     mesh.position.set(
@@ -47,9 +53,22 @@ const sketch = ({ context }) => {
       random.range(-1,1), // z
     );
 
-    mesh.scale.multiplyScalar(0.3);
+    mesh.scale.set(
+      random.range(-1,1), // x
+      random.range(-1,1), // y
+      random.range(-1,1), // z
+    );
+
+    mesh.scale.multiplyScalar(0.5);
     scene.add(mesh);
   }
+
+  scene.add(new THREE.AmbientLight('hsl(0, 0%, 40%)'));
+
+  const light = new THREE.DirectionalLight('white', 1);
+  // light.position.set(2, 2, 4);
+  light.position.set(0, 0, 4);
+  scene.add(light);
   
 
   // draw each frame
@@ -83,6 +102,7 @@ const sketch = ({ context }) => {
     },
     // Update & render your scene here
     render({ time }) {
+      scene.rotation.y = time;
       renderer.render(scene, camera);
     },
     // Dispose of events & renderer for cleaner hot-reloading
